@@ -1,0 +1,427 @@
+<mt:include name="include/header.tmpl">
+
+<style type="text/css">
+<!--
+.example {
+	color:#7B7C7D;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.hint a {
+	color:#5C909B;
+	font-weight: bolder;
+}
+
+.hint a:hover, a:active {
+	color:#839B5C;
+	font-weight: bolder;
+}
+
+.field-header label {
+	color:#5d5c5e;
+}
+
+-->
+</style>
+
+<script type="text/javascript">
+     /* <![CDATA[ */
+
+function retrun_page(){
+    location.href="<TMPL_VAR NAME=MT_URI>?__mode=list&_type=mailpack&blog_id=<TMPL_VAR NAME=BLOG_ID escpae="html">";
+}
+function list_change(){
+	var blog_id = document.getElementById("blog_select").value;
+	var viewid = "add_category_view_" + blog_id;
+	var parentObj = document.getElementById("category_check_field");
+
+	if ( blog_id > 0 ){
+		document.getElementById("category_label").style.display="block";
+                document.getElementById("custom_fields_label").style.display="block";
+                document.getElementById("custom_fields_hint").style.display="block";
+	}else{
+		document.getElementById("category_label").style.display="none";
+                document.getElementById("custom_fields_label").style.display="none";
+                document.getElementById("custom_fields_hint").style.display="none";
+	}
+	for(var i in parentObj.childNodes) {
+		var childObj=parentObj.childNodes[i];
+		if(childObj.id != undefined){
+			if (childObj.id == viewid) {
+				document.getElementById(childObj.id).style.display="block";
+			} else {
+				document.getElementById(childObj.id).style.display="none";
+			}
+			for(var j in childObj.childNodes) {
+				var childObj1 = childObj.childNodes[j];
+				for(var k in childObj1.childNodes) {
+					var childObj2 = childObj1.childNodes[k];
+					for(var l in childObj2.childNodes) {
+						var childObj3 = childObj2.childNodes[l];
+						if(childObj3.id != undefined){
+							document.getElementById(childObj3.id).checked = false;
+						}
+					}
+				}
+			}
+		}
+	}
+        viewid = "add_custom_fields_view_" + blog_id;
+        parentObj = document.getElementById("custom_fields_check_field");
+        for(var i in parentObj.childNodes) {
+              var childObj=parentObj.childNodes[i];
+              if(childObj.id != undefined) {
+                  if (childObj.id == viewid) {
+                       document.getElementById(childObj.id).style.display="block";
+                  } else {
+                       document.getElementById(childObj.id).style.display="none";
+                  } 
+              }
+        }
+
+}
+
+function hint_list_change()
+{
+	var blog_id = document.getElementById("blog_select").value;
+	var setting_id = "setting_hint_id_" + blog_id;
+	var parentObj = document.getElementById("setting_hint_group");
+	if (blog_id == 0 ) {
+	    parentObj.style.display="none";
+		return;
+	}
+	parentObj.style.display="block";
+	for (var i in parentObj.childNodes) {
+		var childObj=parentObj.childNodes[i];
+		if (childObj.id != undefined){
+			if (childObj.id == setting_id){
+				document.getElementById(childObj.id).style.display="block";
+			} else {
+	     	   	document.getElementById(childObj.id).style.display="none";
+			}
+		}
+	}
+}
+
+function filter_list_change()
+{
+	var blog_id = document.getElementById("blog_select").value;
+	var viewid = "filter_child_field_" + blog_id;
+	var parentObj = document.getElementById("filter_child_group_field");
+	if (blog_id == 0 )
+	{
+		document.getElementById("filter_field").style.display="none";
+		return;
+	}
+	document.getElementById("filter_field").style.display="block";
+	if( document.getElementById("u_d_filter_type").value == 0 ){
+	    document.getElementById("filter_child_group_field").style.display="none";
+	    return;
+	}
+	document.getElementById("filter_child_group_field").style.display="block";
+	for (var i in parentObj.childNodes)
+	{
+		var childObj=parentObj.childNodes[i];
+		if (childObj.id != undefined)
+		{
+			if (childObj.id == viewid)
+			{
+				document.getElementById(childObj.id).style.display="block";
+			} else {
+		     	if ( childObj.id != "filter_child_header-field" )
+		     	{
+		     	   	document.getElementById(childObj.id).style.display="none";
+				}
+			}
+		}
+	}
+}
+
+function FormValueCheck(form) {
+	/* input email check */
+	
+	if(!form.blog_select.value || form.blog_select.value == '0'){
+		alert("<MT_TRANS phrase="blog is not select">");
+		return false;
+	}
+	if(!form.u_d_address_text.value){
+		alert("<MT_TRANS phrase="email address is not input">");
+		return false;
+	}
+	else if(!form.u_d_address_text.value.match(/^[a-z\d_\-\.]+@([a-z\d_\-]+\.)+[a-z]+$/)){
+		alert("<MT_TRANS phrase="email address is error">");
+		return false;
+	}
+	/* pop3 server name check */
+	if(!form.u_d_pop3_text.value){
+		alert("<MT_TRANS phrase="pop3 server name is not input">");
+		return false;
+	}
+	else if(!form.u_d_pop3_text.value.match(/^[a-zA-Z\d_@\-\.]+$/)){
+		alert("<MT_TRANS phrase="pop3 server name input error">");
+		return false;
+	}
+	/* pop3 server user name check */
+	if(!form.u_d_user_text.value){
+		alert("<MT_TRANS phrase="pop3 server user is not input">");
+		return false;
+	}
+	/* pop3 server password check */
+	if(!form.u_d_pass_text.value){
+		alert("<MT_TRANS phrase="pop3 server password is not input">");
+		return false;
+	}
+	var assist_id = "u_d_assist_id_" + form.blog_select.value;
+	if( form.u_d_filter_type.value > 0 && document.getElementById( assist_id ).value == 0 ){
+	   alert("<MT_TRANS phrase="Please select amanuensis author.">");
+	   return false;
+	}
+	return true;
+}
+  /* ]]> */
+</script>
+
+<TMPL_IF NAME=mpack_error>
+<div id="generic-error" class="msg msg-error">
+<$mt:var name="mpack_error" escape="html" nl2br="xhtml" $>
+<a href="javascript:void(0)" onclick="javascript:hide('generic-error');return false;" class="close-me"><span>close</span></a>
+</div>
+</TMPL_IF>
+
+<mt:if name="CF_ERROR">
+<mt:loop name="CF_ERROR">
+  <div id="generic-cf-error-<TMPL_VAR NAME=NO>" class="msg msg-error">
+     <mt:var name="message" escape="html">
+     <a href="javascript:void(0)" onclick="javascript:hide('generic-cf-error-<TMPL_VAR NAME=NO>');return false;" class="close-me"><span>close</span></a>
+  </div>
+</mt:loop>
+</mt:if>
+
+<TMPL_IF NAME=mpack_saved>
+     <div id="saved" class="msg msg-success"><p class="msg-text"><__trans phrase="Email Post settings have been saved."></p></div>
+</TMPL_IF>
+
+
+<form name="profile" id="profile" method="post" action="<TMPL_VAR NAME=MT_URI>" onsubmit="return FormValueCheck(this)">
+<input type="hidden" name="__mode" value="save_mailpack" />
+<input type="hidden" name="blog_id" value="<mt:var name="blog_id" escape="html">" />
+<input type="hidden" name="setting_id" value="<TMPL_VAR NAME=SETTING_ID ESCAPE=HTML>" />
+<input type="hidden" name="magic_token" value="<mt:var name="magic_token">" />
+
+<h3><MT_TRANS phrase="entry blog setting"></h3>
+<br />
+<div class="field-header">
+    <label><MT_TRANS phrase="please select entry blog"></label>
+</div>
+<div style="margin-top: 5px;" class="field-content ">
+    <select id="blog_select" class="blog_select" name="blog_select" onChange="list_change();filter_list_change();hint_list_change();">
+        <option value="0">&lt;<MT_TRANS phrase="Not set">&gt;</option>
+    <TMPL_LOOP B_C_LIST>
+        <option value="<TMPL_VAR NAME=B_ID ESCAPE=HTML>" <TMPL_IF NAME=B_SELECT>selected="selected"</TMPL_IF>><TMPL_VAR NAME=B_NAME ESCAPE=HTML></option>
+    </TMPL_LOOP>
+    </select>
+</div>
+<br />
+
+<div class="field-header" id="category_label" <TMPL_UNLESS NAME=SETTING_ID>style="display:none;"</TMPL_UNLESS>>
+    <label><MT_TRANS phrase="please select entry category"></label>
+</div>
+<div style="margin-top: 5px;margin-left: 10px;" class="field-content ">
+<div class="category_check_field" id="category_check_field">
+    <TMPL_LOOP B_C_LIST>
+    <div class="add_category_view_<TMPL_VAR NAME=B_ID ESCAPE=HTML>" id="add_category_view_<TMPL_VAR NAME=B_ID ESCAPE=HTML>" <TMPL_UNLESS NAME=B_SELECT>style="display:none;"</TMPL_UNLESS>>
+        <ul>
+    <TMPL_IF NAME=C_ARRAY>
+        <TMPL_LOOP NAME=C_ARRAY>
+            <li><input type="checkbox" class="category_checkbox" id="category_<TMPL_VAR NAME=C_ID ESCAPE=HTML>" name="category_<TMPL_VAR NAME=C_ID ESCAPE=HTML>" value="<TMPL_VAR NAME=C_ID ESCAPE=HTML>" <TMPL_IF NAME=C_SELECT>checked</TMPL_IF>> <TMPL_VAR NAME=C_SPACE><TMPL_VAR NAME=C_LABEL ESCAPE=HTML></li>
+        </TMPL_LOOP>
+    <TMPL_ELSE>
+            <li><MT_TRANS phrase="category not entry"></li>
+    </TMPL_IF>
+        </ul>
+    </div>
+    </TMPL_LOOP>
+</div>
+</div>
+
+<br />
+
+<div class="field-header" id="custom_fields_label" <TMPL_UNLESS NAME=SETTING_ID>style="display:none;"</TMPL_UNLESS>>
+    <label><MT_TRANS phrase="please select custom fields"></label>
+</div>
+<div style="margin-top: 5px;margin-left: 10px;" class="field-content ">
+<div class="custom_fields_check_field" id="custom_fields_check_field" style="margin-top: 10px;margin-bottom: 10px;">
+    <TMPL_LOOP B_C_LIST>
+    <div class="add_custom_fields_view_<TMPL_VAR NAME=B_ID ESCAPE=HTML>" id="add_custom_fields_view_<TMPL_VAR NAME=B_ID ESCAPE=HTML>" <TMPL_UNLESS NAME=B_SELECT>style="display:none;"</TMPL_UNLESS>>
+    <TMPL_IF NAME=CUSTOM_FIELDS>
+        <TMPL_LOOP NAME=CUSTOM_FIELDS>
+            <TMPL_IF NAME=__FIRST__>
+            <ul id="custom_fields_lists" class="ui-sortable">
+            </TMPL_IF>
+            <li id="id_<TMPL_VAR NAME=id>" class="lists sortable_items">
+                <input 
+                   type="checkbox" 
+                   class="custom_fields_checkbox"
+                   id="custom_fields_<TMPL_VAR NAME=B_ID ESCAPE=HTML>"
+                   name="custom_fields_<TMPL_VAR NAME=B_ID ESCAPE=HTML>"
+                   value="<TMPL_VAR NAME=id ESCAPE=HTML>"
+                   <TMPL_IF NAME=check>checked</TMPL_IF>>
+                   <TMPL_VAR NAME=name ESCAPE=HTML>&nbsp;(&nbsp;<mt:if name="type" eq="image"><__trans phrase="Image Type"><mt:else><__trans phrase="File Type"></mt:if>&nbsp;)</li>
+            <TMPL_IF NAME=__LAST__>
+            </ul>
+            </TMPL_IF>
+        </TMPL_LOOP>
+    <TMPL_ELSE>
+            <ul><li><MT_TRANS phrase="There are no custom fields are available."></li></ul>
+    </TMPL_IF>
+    </div>
+    </TMPL_LOOP>
+</div>
+<div id="custom_fields_hint" class="hint" <TMPL_UNLESS NAME=SETTING_ID>style="display:none;"</TMPL_UNLESS>>
+<__trans phrase="Allows registration of custom field of the attachment."><br />
+<__trans phrase="Determined to save the attachment order, depending on the sequence of the above set of custom fields. List of settings can be changed by dragging."><br />
+<__trans phrase="Attachments can be registered in the custom field types will be two types of image and file. Otherwise they will be registered in the body column."><br />
+</div>
+</div>
+
+
+<br />
+
+<h3><MT_TRANS phrase="mail server setting"></h3>
+
+<br />
+<div class="field-header">
+    <label><MT_TRANS phrase="please input email address.(To)"><span class="example">( <MT_TRANS phrase="example"> : mailpack@skyarc.co.jp )</span></label>
+</div>
+<div class="field-content ">
+    <input type="text" class="" id="" name="u_d_address_text" value="<TMPL_VAR NAME=SETTING_EMAIL  ESCAPE=HTML>" maxlength="75" size="75" />
+    <div>
+       <p class="hint"><MT_TRANS phrase="*If you are mailing a post which must have been registered in the mailing list email inbox."></p>
+    </div>
+</div>
+<br />
+
+<div class="field-header">
+    <label><MT_TRANS phrase="please input pop3 server name."><span class="example">( <MT_TRANS phrase="example"> : mail.skyarc.co.jp )</span></label>
+</div>
+<div class="field-content ">
+    <input type="text" class="" id="" name="u_d_pop3_text" value="<TMPL_VAR NAME=SETTING_POP3 ESCAPE=HTML>" maxlength="75" size="75"/>
+</div>
+<br />
+
+<div class="field-header">
+    <label><MT_TRANS phrase="please input pop3 server port."><span class="example">( <MT_TRANS phrase="example"> : 110 )</span></label>
+</div>
+<div class="field-content ">
+    <input type="text" class="" id="" name="u_d_port_text" value="<TMPL_VAR NAME=SETTING_PORT  ESCAPE=HTML>" maxlength="8" size="10"/>
+</div>
+<br />
+
+<div class="field-header">
+    <label><MT_TRANS phrase="please check. when the pop3 server used ssl."></label>
+</div>
+<div class="field-content ">
+    <input type="checkbox" class="" id="" name="u_d_ssl_flg" value="1" <TMPL_IF NAME=SETTING_SSL_FLG>checked</TMPL_IF>/>
+</div>
+<br />
+
+
+<div class="field-header">
+    <label><MT_TRANS phrase="Inbox : please input pop3 server user name."><span class="example">( <MT_TRANS phrase="example"> : mailpack )</span></label>
+</div>
+<div class="field-content ">
+    <input type="text" class="" id="" name="u_d_user_text" value="<TMPL_VAR NAME=SETTING_USER  ESCAPE=HTML>" maxlength="75" size="20"/>
+</div>
+<br />
+
+<div class="field-header">
+    <label><MT_TRANS phrase="Inbox : please input password."><span class="example">( <MT_TRANS phrase="example"> : SkyarcPasswd05 )</span></label>
+</div>
+<div class="field-content ">
+    <input type="password" class="" id="" name="u_d_pass_text" value="<TMPL_VAR NAME=SETTING_PASS  ESCAPE=HTML>" maxlength="20" size="10"/>
+</div>
+<br />
+
+<div id="filter_field" <TMPL_UNLESS NAME=SETTING_BLOG_ID>style="display:none;"</TMPL_UNLESS> >
+   <div class="field-header">
+       <label><MT_TRANS phrase="Please select an author and how the sender."></label>
+   </div>
+   <div class="field_contents" >
+       <select name="u_d_filter_type" id="u_d_filter_type" onChange="filter_list_change()">
+           <option value="0" <TMPL_IF NAME=SETTING_FILTER_TYPE_0>selected="selected"</TMPL_IF>><MT_TRANS phrase="From the sender and the MT was registered as a user, the sender ignores unregistered"></option>
+           <option value="1" <TMPL_IF NAME=SETTING_FILTER_TYPE_1>selected="selected"</TMPL_IF>><MT_TRANS phrase="From the sender and the MT was registered as a user, the sender of an unregistered amanuensis author"></option>
+           <option value="2" <TMPL_IF NAME=SETTING_FILTER_TYPE_2>selected="selected"</TMPL_IF>><MT_TRANS phrase="The all sender is amanuensis author"></option>
+       </select>
+       <div>
+          <p class="hint"><MT_TRANS phrase="If the sender to register user MT user's (email) Please specify a sender's email address."></p>
+       </div>
+   </div>
+   <div id="filter_child_group_field" <TMPL_UNLESS NAME=SETTING_FILTER_TYPE>style="display:none"</TMPL_UNLESS>>
+      <div class="field-header" id="filter_child_header-field">
+         <label><MT_TRANS phrase="Please select amanuensis author."></label>
+      </div>
+      <TMPL_LOOP B_C_LIST>
+      <div class="field-content" id="filter_child_field_<TMPL_VAR NAME=B_ID ESCAPE=HTML>" <TMPL_UNLESS NAME=B_SELECT>style="display:none"</TMPL_UNLESS> >
+         <TMPL_IF NAME="AUTHORS">
+         <select name="u_d_assist_id_<TMPL_VAR NAME=B_ID ESCAPE=HTML>" id="u_d_assist_id_<TMPL_VAR NAME=B_ID ESCAPE=HTML>">
+             <option value="0" <TMPL_UNLESS NAME=A_SELECTED>selected="selected"</TMPL_UNLESS>>&lt;<MT_TRANS phrase="Not set">&gt;</option>
+             <TMPL_LOOP AUTHORS>
+             <option value="<TMPL_VAR NAME=A_ID ESCAPE=HTML>" <TMPL_IF NAME=A_SELECTED>selected="selected"</TMPL_IF>><TMPL_VAR NAME=A_NAME ESCAPE=HTML></option>
+             </TMPL_LOOP>
+         </select>
+         <TMPL_ELSE>
+         <div><MT_TRANS phrase="To do this, given site ([_1]) Please add a user who has rights to more than one author." params="<TMPL_VAR NAME=B_NAME ESCAPE=HTML>" ></div>
+         </TMPL_IF>
+      </div>
+      </TMPL_LOOP>
+   </div>
+</div>
+<br />
+
+<div style="margin-top: 10px;" id="setting_hint_group" <TMPL_UNLESS NAME=SETTING_BLOG_ID>style="display:none;"</TMPL_UNLESS> >
+  <TMPL_LOOP B_C_LIST>
+     <p class="hint" id="setting_hint_id_<TMPL_VAR NAME=B_ID>" <TMPL_UNLESS NAME=B_SELECT>style="display:none;"</TMPL_UNLESS>>
+       <MT_TRANS phrase="*From the blogs in addition to setting selected on the screen ([_1]) Please also [_2]plug-in</a> settings." params="<TMPL_VAR NAME=B_NAME ESCAPE=HTML>%%<a href="<mtvar name="script_url">?__mode=cfg_plugins&blog_id=<TMPL_VAR NAME=B_ID ESCAPE=HTML>" target="_blank">">
+     </p>
+  </TMPL_LOOP>
+</div>
+
+<div style="border: double 3px #7B7C7D; margin-top: 10px; padding: 5px; width: 65%">
+    <p>
+    <MT_TRANS phrase="Note: This feature is not spam filtering capabilities."><br />
+    <MT_TRANS phrase="Make posted an email from the sender is no guarantee of security is dangerous."><br />
+    <MT_TRANS phrase="May be stored on the server from malicious programs and scripts as attachments."><br />
+    <MT_TRANS phrase="That is implemented on the mail server and spam filter, they are also a security guarantee enough, please make sure that incoming mail is not saved in the incorrect box."><br />
+    <MT_TRANS phrase="Damage by e-mail that was posted in the hope for this feature at your own risk.">
+    </p>
+</div>
+
+<br />
+
+<div class="actions-bar settings-actions-bar">
+    <button type="submit" class="save action"><MT_TRANS phrase="Save"></button>
+    <button onclick="retrun_page(); return false" type="submit" class="cancel action"><MT_TRANS phrase="cancel setting"></button>
+</div>
+<form>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+
+// Initialize
+jQuery(document).ready(function () {
+    jQuery('#custom_fields_lists').sortable({
+        axis: 'y'
+    });
+    // Damn! for IE compatibility
+    jQuery('.sortable_items li').bind('mouseover', function () {
+        jQuery('#custom_fields_lists').sortable('disable');
+    }).bind('mouseout', function () {
+        jQuery('#custom_fields_lists').sortable('enable');
+    });
+});
+
+/* ]]> */
+</script>
+
+<mt:include name="include/footer.tmpl">

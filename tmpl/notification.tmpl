@@ -1,0 +1,116 @@
+<fieldset>
+    <mtapp:setting
+        id="comment_thread"
+        label="<MT_TRANS phrase="Mail threading control">"
+    >
+<ul>
+  <li><input type="radio" value="0" name="comment_thread" id="comment_thread" class="rb" <mt:if name="COMMENT_THREAD" eq="0">checked="checked"</mt:if> />
+    <MT_TRANS phrase="Always a mail makes an entry"></li>
+  <li><input type="radio" value="1" name="comment_thread" id="comment_thread" class="rb" <mt:if name="COMMENT_THREAD" eq="1">checked="checked"</mt:if> />
+    <MT_TRANS phrase="Replied mail makes threaded comments for the original entry"></li>
+  <li><input type="radio" value="2" name="comment_thread" id="comment_thread" class="rb" <mt:if name="COMMENT_THREAD" eq="2">checked="checked"</mt:if> />
+    <MT_TRANS phrase="Replied mail makes a plain comment for the original entry"></li>
+</ul>
+    </mtapp:setting>
+</fieldset>
+
+<fieldset>
+    <mtapp:setting
+        id="notification_flg"
+        label="<MT_TRANS phrase="notifies of input entry with mail">"
+    >
+    <ul>
+    <li><input type="radio" value="1" name="notification_flg" id="notification_flg" class="rb" <TMPL_IF NAME=NOTIFICATION_FLG>checked="checked"</TMPL_IF> /> <MT_TRANS phrase="notifies"></li>
+    <li><input type="radio" value="0" name="notification_flg" id="notification_flg" class="rb" <TMPL_UNLESS NAME=NOTIFICATION_FLG>checked="checked"</TMPL_UNLESS> /> <MT_TRANS phrase="doesn't notify"></li>
+    </ul>
+    <div>
+    <p class="hint">
+       <MT_TRANS phrase="*Notification will be similar to such a notification.">
+    </p>
+    </div>
+    </mtapp:setting>
+</fieldset>
+
+<fieldset>
+    <mtapp:setting
+        id="notification_superuser"
+        label="<MT_TRANS phrase="notification email send to system administrator">"
+    >
+    <ul>
+    <li><input type="radio" value="1" name="notification_superuser" id="notification_superuser" class="rb" <TMPL_IF NAME=NOTIFICATION_SUPERUSER>checked="checked"</TMPL_IF> /> <MT_TRANS phrase="notifies"></li>
+    <li><input type="radio" value="0" name="notification_superuser" id="notification_superuser" class="rb" <TMPL_UNLESS NAME=NOTIFICATION_SUPERUSER>checked="checked"</TMPL_UNLESS> /> <MT_TRANS phrase="doesn't notify"></li>
+    </ul>
+    </mtapp:setting>
+</fieldset>
+
+<fieldset>
+    <mtapp:setting
+        id="notification_subject"
+        label="<MT_TRANS phrase="prefix of email subject">"
+    >
+    <ul>
+    <li><input type="text" name="notification_subject" id="notification_subject" value="<TMPL_VAR NAME=NOTIFICATION_SUBJECT  ESCAPE=HTML>" /></li>
+    </ul>
+    <div>
+      <p class="hint">
+          <MT_TRANS phrase="ex) MailPack: Posted a new article.">
+      </p>
+    </div>
+    </mtapp:setting>
+</fieldset>
+
+<fieldset>
+    <mtapp:setting
+        id="thumbnail_width"
+        label="<MT_TRANS phrase="thumbnail max width">"
+    >
+    <ul>
+    <li><input type="text" size="4" maxlength="4" name="thumbnail_width" id="thumbnail_width" value="<TMPL_VAR NAME=THUMBNAIL_WIDTH  ESCAPE=HTML>" /> px</li>
+    </ul>
+    <div>
+       <p class="hint">
+          <MT_TRANS phrase="*Sets the width of the thumbnail image file attached to e-mail.">
+       </p>
+    </div>
+    </mtapp:setting>
+</fieldset>
+
+<fieldset>
+    <mtapp:setting
+        id="insert_point"
+        label="<MT_TRANS phrase="file insert point">"
+    >
+    <select id="insert_point" name="insert_point">
+        <option value="0" <TMPL_UNLESS NAME=INSERT_POINT>selected="selected"</TMPL_UNLESS>><MT_TRANS phrase="Ahead of the entry text"></option>
+        <option value="1" <TMPL_IF NAME=INSERT_POINT>selected="selected"</TMPL_IF>><MT_TRANS phrase="After the entry text"></option>
+    </select>
+    </mtapp:setting>
+</fieldset>
+
+<fieldset>
+    <mtapp:setting
+        id="post_status"
+        label="<MT_TRANS phrase="post status default">"
+    >
+    <select name="post_status" id="post_status">
+       <option value="0" <TMPL_IF NAME=POST_STATUS_0>selected="selected"</TMPL_IF>>&lt;<__trans phrase="Default Blog">&gt;</option>
+       <option value="1" <TMPL_IF NAME=POST_STATUS_1>selected="selected"</TMPL_IF>><__trans phrase="Unpublished"></option>
+       <option value="2" <TMPL_IF NAME=POST_STATUS_2>selected="selected"</TMPL_IF>><__trans phrase="Published"></option>
+   </select>
+   </mtapp:setting>
+</fieldset>
+
+
+<fieldset>
+    <mtapp:setting
+        id="assist_post_status"
+        label="<MT_TRANS phrase="amanuensis author post status default">"
+    >
+    <select name="assist_post_status" id="assist_post_status">
+       <option value="0" <TMPL_IF NAME=ASSIST_POST_STATUS_0>selected="selected"</TMPL_IF>>&lt;<__trans phrase="Default Blog">&gt;</option>
+       <option value="1" <TMPL_IF NAME=ASSIST_POST_STATUS_1>selected="selected"</TMPL_IF>><__trans phrase="Unpublished"></option>
+       <option value="2" <TMPL_IF NAME=ASSIST_POST_STATUS_2>selected="selected"</TMPL_IF>><__trans phrase="Published"></option>
+   </select>
+   </mtapp:setting>
+</fieldset>
+
